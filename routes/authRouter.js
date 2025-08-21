@@ -3,6 +3,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -60,6 +61,30 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// Update profile
+router.put("/users/me", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id; // from JWT middleware
+    const updates = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      updates,
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Could not save changes" });
+  }
+});
+
 
 // Forgot Password (placeholder)
 router.post("/forgot-password", async (req, res) => {
