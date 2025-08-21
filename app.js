@@ -30,7 +30,7 @@ const start = async () => {
     await mongoose.connect(process.env.MONGO_URI);
 
     console.log("Database Connected");
-    console.log("JWT_SECRET is:", process.env.JWT_SECRETkey);
+    console.log("JWT_SECRET is:", process.env.JWT_SECRET);
 
     //     console.log("Skipping Database Connection till Mongo URI Is Available...");
 
